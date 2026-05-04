@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOMENTUM Vertaler — The Industry Playground</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f9f7f4;
+    --surface-hover: #f3f0eb;
+    --border: #e8e2d9;
+    --border-accent: #d4cdc3;
+    --text: #1a1a1a;
+    --text-muted: #6b6560;
+    --text-dim: #9e9790;
+    --accent: #c9a96e;
+    --accent-glow: rgba(201, 169, 110, 0.12);
+    --accent-hover: #b8973f;
+    --accent-text: #8a6d2f;
+    --phase1: #c9a96e;
+    --phase2: #8b7ec8;
+    --phase3: #4aab8a;
+    --phase4: #c96e6e;
+    --tag-bg: rgba(201, 169, 110, 0.08);
+    --tag-border: rgba(201, 169, 110, 0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .header h1 span { color: var(--accent-text); }
+  .header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  /* STEPS */
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    border: 1px solid var(--accent);
+    color: var(--accent-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .step-subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  /* FORM ELEMENTS */
+  .field-group {
+    margin-bottom: 20px;
+  }
+  .field-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .field-group .hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-top: 2px;
+  }
+
+  input[type="text"], textarea, select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.2s;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b6560' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+  select option { background: var(--bg); color: var(--text); }
+
+  /* RADIO/OPTION GROUPS */
+  .option-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .option-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .option-card:hover { border-color: var(--border-accent); background: var(--surface-hover); }
+  .option-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .option-card .option-name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .option-card .option-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* CADANS */
+  .cadans-slider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .cadans-slider input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    background: var(--border);
+    height: 4px;
+    border-radius: 4px;
+    outline: none;
+  }
+  .cadans-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  .cadans-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent-text);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* SUBTHEMA */
+  .subthema-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+  .subthema-row input {
+    flex: 1;
+  }
+  .subthema-number {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-dim);
+    min-width: 20px;
+  }
+  .btn-add-subthema {
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .btn-add-subthema:hover { border-color: var(--accent); color: var(--accent-text); }
+
+  /* BUTTON */
+  .btn-generate {
+    width: 100%;
+    padding: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .btn-generate:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* OUTPUT */
+  #output { display: none; }
+  #output.visible { display: block; margin-top: 32px; }
+
+  .output-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding: 28px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .output-header h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .output-header .meta {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .mix-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 20px;
+    gap: 2px;
+  }
+  .mix-bar div { border-radius: 2px; }
+
+  /* PHASE / WEEK SECTIONS */
+  .week-section {
+    margin-bottom: 28px;
+  }
+  .week-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: var(--surface);
+    border-left: 4px solid;
+  }
+  .week-header.f1 { border-color: var(--phase1); }
+  .week-header.f2 { border-color: var(--phase2); }
+  .week-header.f3 { border-color: var(--phase3); }
+  .week-header.f4 { border-color: var(--phase4); }
+  .phase-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .phase-intent {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .phase-week-label {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* CALENDAR GRID */
+  .cal-grid {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .cal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .cal-card:hover { border-color: var(--border-accent); background: var(--surface-hover); }
+  .cal-card.active {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .cal-card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .cal-day {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .cal-type-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+  .cal-category {
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-left: auto;
+    font-weight: 500;
+  }
+  .cal-subthema {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* EXPANDED HOOKS PANEL */
+  .hooks-panel {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 16px;
+    margin-top: -8px;
+    margin-bottom: 8px;
+    animation: slideDown 0.25s ease-out;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; max-height: 0; padding: 0 16px; }
+    to { opacity: 1; max-height: 500px; padding: 16px; }
+  }
+  .hook-suggestion {
+    padding: 10px 14px;
+    background: var(--bg);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .hook-suggestion:hover {
+    border-color: var(--border-accent);
+  }
+  .hook-suggestion .hook-text { color: var(--text); }
+  .hook-suggestion .hook-instruction {
+    color: var(--text-dim);
+    font-size: 11px;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .hook-number {
+    color: var(--accent-text);
+    font-weight: 700;
+    margin-right: 6px;
+    font-size: 11px;
+  }
+  .hooks-panel-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .btn-shuffle-hooks {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-family: inherit;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .btn-shuffle-hooks:hover { border-color: var(--accent); color: var(--accent-text); }
+
+  .context-hints {
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: rgba(201, 169, 110, 0.06);
+    border-radius: 6px;
+    border-left: 2px solid var(--accent);
+  }
+  .context-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .context-hint-label {
+    font-weight: 600;
+    color: var(--accent-text);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .container { padding: 20px 16px; }
+    .option-grid { grid-template-columns: 1fr; }
+    .step { padding: 20px; }
+    .cal-grid { grid-template-columns: 1fr !important; }
+  }
+
+  /* OUTPUT ACTIONS */
+  .btn-secondary {
+    padding: 10px 20px;
+    background: transparent;
+    color: var(--accent-text);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--accent-glow); }
+  .output-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  /* ANIMATION */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.4s ease-out; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1><span>MOMENTUM</span> Vertaler</h1>
+    <p>Jouw content-regisseur voor de komende arc</p>
+  </div>
+
+  <!-- STEP 1: ARCHETYPE + TIER -->
+  <div class="step" id="step1">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div>
+        <div class="step-title">Jouw profiel</div>
+        <div class="step-subtitle">Archetype, aanbod en ritme</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Jouw archetype</label>
+      <div class="option-grid">
+        <div class="option-card" data-value="maison" onclick="selectOption(this, 'archetype')">
+          <div class="option-name">Maison</div>
+          <div class="option-desc">Community builder. Verbinding en resultaat centraal.</div>
+        </div>
+        <div class="option-card" data-value="maven" onclick="selectOption(this, 'archetype')">
+          <div class="option-name">Maven</div>
+          <div class="option-desc">Strategist. Kennis en autoriteit voorop.</div>
+        </div>
+        <div class="option-card" data-value="muse" onclick="selectOption(this, 'archetype')">
+          <div class="option-name">Muse</div>
+          <div class="option-desc">Rolmodel. Energie en inspiratie leiden.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Tier van je aanbod</label>
+      <div class="option-grid">
+        <div class="option-card" data-value="low" onclick="selectOption(this, 'tier')">
+          <div class="option-name">Low</div>
+          <div class="option-desc">&euro;22 – &euro;333</div>
+        </div>
+        <div class="option-card" data-value="mid" onclick="selectOption(this, 'tier')">
+          <div class="option-name">Mid</div>
+          <div class="option-desc">&euro;500 – &euro;5.000</div>
+        </div>
+        <div class="option-card" data-value="high" onclick="selectOption(this, 'tier')">
+          <div class="option-name">High</div>
+          <div class="option-desc">&euro;10.000+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Cadans <span class="hint">— hoe vaak post je per week?</span></label>
+      <div class="cadans-slider">
+        <input type="range" id="cadans" min="2" max="7" value="5" oninput="updateCadans()">
+        <div class="cadans-value" id="cadansValue">5x</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Arc lengte</label>
+      <select id="arcLength">
+        <option value="4">4 weken (standaard)</option>
+        <option value="6">6 weken</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STEP 2: CONTENT CONTEXT -->
+  <div class="step" id="step2">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div>
+        <div class="step-title">Jouw MOMENTUM-context</div>
+        <div class="step-subtitle">Dit maakt je content persoonlijk en scherp</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Aanbod <span class="hint">— wat verkoop je deze arc?</span></label>
+      <input type="text" id="aanbod" placeholder="Bijv. The Content Studio — 6 maanden membership">
+    </div>
+
+    <div class="field-group">
+      <label>Hoofdthema <span class="hint">— het core thema van deze arc</span></label>
+      <input type="text" id="thema" placeholder="Bijv. Geld (voor quantum teacher) / Positionering (voor business coach)">
+    </div>
+
+    <div class="field-group">
+      <label>Subthema's <span class="hint">— de specifieke onderwerpen binnen je thema waar je klant aan denkt</span></label>
+      <div id="subthemaContainer">
+        <div class="subthema-row">
+          <span class="subthema-number">1.</span>
+          <input type="text" class="subthema-input" placeholder="Bijv. Money blocking">
+        </div>
+        <div class="subthema-row">
+          <span class="subthema-number">2.</span>
+          <input type="text" class="subthema-input" placeholder="Bijv. Ontvangen vs vasthouden">
+        </div>
+        <div class="subthema-row">
+          <span class="subthema-number">3.</span>
+          <input type="text" class="subthema-input" placeholder="Bijv. Grenzen stellen">
+        </div>
+      </div>
+      <button class="btn-add-subthema" onclick="addSubthema()">+ Subthema toevoegen</button>
+    </div>
+
+    <div class="field-group">
+      <label>3 verlangens van je klant <span class="hint">— wat wil ze het liefst?</span></label>
+      <textarea id="verlangens" placeholder="1. Uitverkopen zonder dagelijks te posten&#10;2. Content die haar autoriteit neerzet&#10;3. Klanten die via DM zeggen 'ik wil erin'"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label>Grotere verlangen <span class="hint">— het achterliggende, diepere verlangen</span></label>
+      <input type="text" id="grotereVerlangen" placeholder="Bijv. Vrijheid en erkenning als d&eacute; expert in haar niche">
+    </div>
+
+    <div class="field-group">
+      <label>GAP <span class="hint">— wat staat er tussen haar en dat verlangen?</span></label>
+      <input type="text" id="gap" placeholder="Bijv. Ze weet niet hoe ze haar expertise vertaalt naar content die verkoopt">
+    </div>
+
+    <div class="field-group">
+      <label>Symptoom <span class="hint">— welk gedrag vertoont ze nu dat niet werkt?</span></label>
+      <input type="text" id="symptoom" placeholder="Bijv. Ze post dagelijks maar krijgt alleen likes, geen klanten">
+    </div>
+
+    <div class="field-group">
+      <label>Diagnose <span class="hint">— wat is het ECHTE probleem dat jij als expert ziet?</span></label>
+      <input type="text" id="diagnose" placeholder="Bijv. Ze deelt kennis zonder positionering — haar content is inwisselbaar">
+    </div>
+
+    <div class="field-group">
+      <label>Marktirritatie <span class="hint">— waar positioneer je t&eacute;gen?</span></label>
+      <input type="text" id="marktirritatie" placeholder="Bijv. De 'post elke dag en wees authentiek'-mantra die niet converteert">
+    </div>
+  </div>
+
+  <!-- GENERATE -->
+  <button class="btn-generate" id="generateBtn" onclick="generate()">
+    Genereer je MOMENTUM-plan
+  </button>
+
+  <!-- OUTPUT -->
+  <div id="output"></div>
+
+</div>
+
+<script>
+// ============================================
+// DATA: ALL HOOKS (165 hooks mapped)
+// ============================================
+
+const HOOKS = {
+  persoonlijk: [
+    {id:"P1", text:"Dit is wat ik ontdekte over {specifiek} — waardoor ik {onverwacht} ook had", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Noem de EXACTE situatie. Niet 'content' maar 'het plannen van carrousels op zondag'. De onverwachte uitkomst maakt het geloofwaardig."},
+    {id:"P2", text:"Dit is hoe ik {resultaat} kreeg en mijn mening over {thema} voor altijd heb bijgesteld", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Begin met het resultaat, dan het keerpunt. De mening-shift is de hook."},
+    {id:"P3", text:"Wat ik moest leren voordat {mijlpaal} — zonder {X}, zodat {Y}", tier:"A", phases:["F1","F2"], instruction:"De 'zonder' maakt het specifiek. Wat liet je los? Wat was het resultaat?"},
+    {id:"P4", text:"Waarom ik altijd {gedrag} doe/zeg/oversla. Zelfs als {spanning}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Het 'zelfs als' voegt de spanning toe. Welk gedrag is herkenbaar voor je klant?"},
+    {id:"P5", text:"Wat ik nog niet eerder deelde over {thema}", tier:"A", phases:["F1","F3"], instruction:"Dit moet echt iets zijn dat je niet eerder hebt gedeeld. De kwetsbaarheid is de kracht."},
+    {id:"P6", text:"Na {specifieke actie/effort} had ik dit eerder willen weten", tier:"A", phases:["F2"], instruction:"Noem de exacte investering — in tijd, geld, of energie. Maakt het tastbaar."},
+    {id:"P7", text:"Pas toen ik {specifiek ding} ging toepassen, kreeg ik {resultaat}", tier:"A", phases:["F2","F3"], instruction:"Het 'pas' benadrukt dat alles ervoor niet werkte. Wat was het kantelpunt?"},
+    {id:"P8", text:"Dit {ding/beslissing/persoon} heeft mijn leven/bedrijf gered", tier:"MH", phases:["F1","F3"], instruction:"Wees dramatisch eerlijk. Wat was er gebeurd als je dit niet had gedaan?"},
+    {id:"P9", text:"Mezelf zien als {X} in plaats van {Y} veranderde alles", tier:"H", phases:["F2"], instruction:"De identiteitsshift. Van welk label naar welk label? Hoe voelde dat?"},
+    {id:"P10", text:"Ik heb er gelukkig nooit naar geluisterd", tier:"A", phases:["F1","F3"], instruction:"Welk advies negeerde je? Van wie? Wat was het resultaat?"},
+    {id:"P11", text:"Ik had dit heel anders verwacht", tier:"A", phases:["F1"], instruction:"De verwachting vs realiteit. Begin met wat je verwachtte, dan de plot twist."},
+    {id:"P12", text:"Als ik je 1 ding mocht leren over {thema}", tier:"A", phases:["F2"], instruction:"Kies het meest onverwachte inzicht, niet het meest voor de hand liggende."},
+    {id:"P13", text:"{Concreet resultaat of faal}, nu snap ik waarom — ik vergat dit ene ding", tier:"MH", phases:["F2","F3"], instruction:"Begin met het cijfer of de faal. '0 verkopen in 3 dagen' of '47 aanmeldingen in een weekend'. Dan de les."},
+    {id:"P14", text:"Ik moest {Y} loslaten om eindelijk {groot verlangen} toe te laten", tier:"MH", phases:["F2"], instruction:"Wat liet je los? Een overtuiging, een werkwijze, een persoon? Het loslaten IS het verhaal."},
+    {id:"P15", text:"Als ik morgen van 0 af aan {ultra-specifiek} moest starten, dit is wat ik zou doen", tier:"A", phases:["F2"], instruction:"Maak het ULTRA specifiek. Niet 'een business' maar 'een paid community voor 100+ leden'. Hoe specifieker, hoe geloofwaardiger."},
+    {id:"P16", text:"De echte waarheid over hoe ik {resultaat} behaalde", tier:"MH", phases:["F3"], instruction:"De 'echte' impliceert dat het gangbare verhaal niet klopt. Wat is het deel dat je normaal weglaat?"},
+    {id:"P17", text:"Een {bizar resultaat} terwijl ik {iets onverwachts deed}", tier:"MH", phases:["F3"], instruction:"Het contrast maakt het. Op vakantie, ziek in bed, met je kids in het park. Terwijl het resultaat binnenkwam."},
+    {id:"P18", text:"Dit is wat ik zou doen om {resultaat} in {tijd}", tier:"A", phases:["F2","F4"], instruction:"Wees concreet in tijd en resultaat. Niet 'meer omzet' maar '10k in 30 dagen'."},
+    {id:"P19", text:"Deze ENE zin helpt me altijd om {resultaat}", tier:"A", phases:["F2"], instruction:"Eén zin. Niet drie. Wat is de mantra die je terugbrengt?"},
+    {id:"P20", text:"Gisterenavond veranderde ik 1 ding in mijn {systeem} waardoor {resultaat}", tier:"A", phases:["F2","F3"], instruction:"Eén ding. Maak het klein en tastbaar. De kracht zit in de eenvoud."},
+    {id:"P21", text:"Hiervoor deed ik {oud gedrag} totdat {keerpunt}", tier:"A", phases:["F1","F2"], instruction:"Het oude gedrag moet herkenbaar zijn voor je klant. Het keerpunt is jouw expertise."},
+    {id:"P22", text:"Ik was hier ook en besloot {X}, toen leerde ik {Y}", tier:"MH", phases:["F2","F3"], instruction:"Toon dat je de situatie van je klant kent van binnenuit. De beslissing is het verhaal."},
+    {id:"P23", text:"Wat niemand me vertelde over {thema}", tier:"A", phases:["F2"], instruction:"Dit is de diagnose verpakt als persoonlijk verhaal. Wat ontdekte je zelf?"},
+    {id:"P24", text:"Na {het behalen van doel} is dit wat ik eerder had willen weten", tier:"MH", phases:["F2"], instruction:"Het doel is al behaald — de les zit in wat je DAARNA pas zag."},
+    {id:"P25", text:"Ik stopte met {gangbare aanpak} en dit is wat er gebeurde", tier:"A", phases:["F1","F2"], instruction:"De gangbare aanpak moet iets zijn dat je klant nu nog doet. Confronterend maar vanuit ervaring."},
+    {id:"P26", text:"Dit is de beslissing die me {bedrag/resultaat} heeft gekost. En wat ik nu anders doe", tier:"MH", phases:["F2","F3"], instruction:"Noem het bedrag of de consequentie. Concreet maakt het geloofwaardig."},
+    {id:"P27", text:"Drie jaar geleden geloofde ik nog dat {oude overtuiging}. Dit is wat ik nu weet", tier:"MH", phases:["F2"], instruction:"De oude overtuiging moet iets zijn dat je klant NU nog gelooft."},
+    {id:"P28", text:"De vraag die ik mezelf stel voordat ik {beslissing} neem", tier:"A", phases:["F2"], instruction:"Eén vraag. Maak het een vraag die je klant zichzelf ook kan stellen."},
+    {id:"P29", text:"Ik zeg nee tegen {gangbaar ding}. Dit is waarom", tier:"A", phases:["F1"], instruction:"Het 'nee' is je positionering. Waar zeg jij nee tegen dat iedereen ja tegen zegt?"},
+    {id:"P30", text:"Het moment dat ik wist: dit werkt niet meer", tier:"MH", phases:["F1","F2"], instruction:"Beschrijf het moment. Waar was je? Wat deed je? Maak het filmisch."},
+    {id:"P31", text:"POV: {rauwe real-life scène met meerdere dingen tegelijk} en besef: dit is mijn leven en het werkt", tier:"A", phases:["F3"], instruction:"Rauw en echt. Langs de weg een kortingscode aanmaken, je zoon vertellen waar zijn boek ligt, druiven eten. De chaos IS het bewijs."}
+  ],
+  bts: [
+    {id:"B1", text:"Dit is mijn {routine/ritueel} om {resultaat}", tier:"LM", phases:["F3"], instruction:"Laat zien hoe simpel het is. De routine is het bewijs dat je systeem werkt."},
+    {id:"B2", text:"\"{Letterlijke quote}\" — dit is wat mijn {man/kind/team} gisteren hoorde omdat {reden}", tier:"MH", phases:["F3"], instruction:"De quote moet rauw en echt zijn. Humor mag."},
+    {id:"B3", text:"Mijn {doel} en zo ga ik het halen", tier:"A", phases:["F1"], instruction:"Maak het ambitieus en concreet. Laat zien dat je vooruit kijkt."},
+    {id:"B4", text:"Kijk hoe ik {iets doe/leer/realiseer} in {korte tijd} zonder {bezwaar}", tier:"L", phases:["F3"], instruction:"Het 'zonder' maakt het aantrekkelijk. Wat laat je juist weg?"},
+    {id:"B5", text:"Dit is wat ik afgelopen weekend deed (+ resultaat)", tier:"A", phases:["F3"], instruction:"Koppel altijd aan een resultaat of inzicht. Niet alleen lifestyle."},
+    {id:"B6", text:"Ik opende vanochtend mijn Mollie/inbox/DM's en zag {X}", tier:"A", phases:["F3","F4"], instruction:"Het moment van ontdekking. Wat zag je en wat voelde je?"},
+    {id:"B7", text:"Dit besef overviel me ineens", tier:"MH", phases:["F1","F3"], instruction:"Het besef moet iets zijn dat relevant is voor je klant. Niet alleen voor jou."},
+    {id:"B8", text:"Deze 3 dingen doe ik elke {periode} om {resultaat}", tier:"LM", phases:["F1","F2","F3","F4"], instruction:"Drie. Niet vijf. En maak ze concreet en uitvoerbaar."},
+    {id:"B9", text:"Zo ziet mijn {dag/week/maand} eruit achter de schermen", tier:"MH", phases:["F3"], instruction:"Laat het echte zien. De chaos, de structuur, de balans."},
+    {id:"B10", text:"Dit is wat ik doe op de dagen dat het niet loopt", tier:"MH", phases:["F3"], instruction:"Kwetsbaar maar sterk. Wat is je coping als ondernemer?"},
+    {id:"B11", text:"Mijn telefoon om {tijd}. Dit is wat je ziet", tier:"A", phases:["F3"], instruction:"Screenshot-waardig. Laat de apps, de cijfers, de DM's zien."},
+    {id:"B12", text:"Ik werk {X uur per week}. Zo verdeel ik ze", tier:"LM", phases:["F3"], instruction:"Concreet aantal uren. Laat zien dat vrijheid geen luiheid is."},
+    {id:"B13", text:"De plek waar ik mijn beste ideeën krijg is niet waar je denkt", tier:"A", phases:["F1","F3"], instruction:"Verrassend. Douche, autorit, wandeling? Maak het menselijk."}
+  ],
+  klantverhalen: [
+    {id:"K1", text:"Binnen {tijd} had ze {groot resultaat}, dit is waar ze mee stopte", tier:"LM", phases:["F3","F4"], instruction:"Het 'stoppen' is de les. Niet wat ze deed, maar wat ze LIET."},
+    {id:"K2", text:"Ze stopte met {oud gedrag} en binnen {tijd} had ze {verlangen}", tier:"A", phases:["F3","F4"], instruction:"Het oude gedrag moet herkenbaar zijn. De tijd maakt het geloofwaardig."},
+    {id:"K3", text:"Dit is hoe {bizar resultaat} in {tijd} behaald werd", tier:"A", phases:["F3"], instruction:"Begin met het resultaat. De 'hoe' komt in de post."},
+    {id:"K4", text:"Haar {metric} ging x{getal} dankzij dit ene ding", tier:"LM", phases:["F3","F4"], instruction:"Concreet getal. x2, x3, x10. Het 'ene ding' belooft eenvoud."},
+    {id:"K5", text:"Ze wilde niet meer {X} maar ook niet {Y}. Dit is wat we deden", tier:"MH", phases:["F3"], instruction:"De paradox. Ze zat vast tussen twee ongewenste opties. Jij gaf haar een derde weg."},
+    {id:"K6", text:"Ze deed {X} voor {periode} en dit is het resultaat", tier:"L", phases:["F3"], instruction:"Simpel en tastbaar. Actie + tijd + resultaat."},
+    {id:"K7", text:"Wat ze moest leren voordat ze {resultaat} kreeg", tier:"MH", phases:["F2","F3"], instruction:"De les is de diagnose. Wat zag zij niet dat jij wel zag?"},
+    {id:"K8", text:"Het {ene ding} dat haar {resultaat} opleverde", tier:"LM", phases:["F3","F4"], instruction:"Eén ding. Niet drie. De simplicity is de hook."},
+    {id:"K9", text:"Ze had {resultaat} in {tijd} dankzij {methode}", tier:"L", phases:["F3","F4"], instruction:"De methode is JOUW methode. Subtle positionering."},
+    {id:"K10", text:"Ze had nooit verwacht dat {groot resultaat}", tier:"A", phases:["F3"], instruction:"De verrassing is de kracht. Wat was zo onverwacht?"},
+    {id:"K11", text:"In {tijd} van {situatie A} naar {situatie B}", tier:"A", phases:["F3","F4"], instruction:"Het contrast moet scherp zijn. Van vastgelopen naar vrijheid. Van 0 naar X."},
+    {id:"K12", text:"Dag 1... Dag {X}... {resultaat shift}", tier:"A", phases:["F3"], instruction:"De tijdlijn toont de transformatie. Visueel en filmisch."},
+    {id:"K13", text:"Dit is wat mijn klant gisteren stuurde", tier:"A", phases:["F3"], instruction:"Screenshot of letterlijke quote. Rauw en ongefilterd."},
+    {id:"K14", text:"Deze doorbraak ga ik met je vieren", tier:"A", phases:["F3"], instruction:"Vieren brengt energie. Deel het moment, niet alleen het resultaat."},
+    {id:"K15", text:"Dit zijn de mindsetshifts die de {programmanaam}-leden elke maand krijgen", tier:"H", phases:["F3"], instruction:"Social proof + exclusiviteit. Laat zien wat er achter de deur gebeurt."},
+    {id:"K16", text:"Ze kwam bij me met {situatie}. {Tijd} later: {resultaat}. Met {verrassend weinig}", tier:"MH", phases:["F3","F4"], instruction:"De 'verrassend weinig' ontmantelt het bezwaar dat het veel moeite kost."},
+    {id:"K17", text:"Haar grootste angst was {X}. Haar grootste doorbraak ook", tier:"MH", phases:["F3"], instruction:"De twist: de angst en de doorbraak zijn hetzelfde ding. Krachtig als het klopt."},
+    {id:"K18", text:"Ze zei letterlijk: \"{quote klant}\". {Tijd} geleden zei ze nog {oude overtuiging}", tier:"A", phases:["F3"], instruction:"De quote moet echt zijn. Het contrast met de oude overtuiging toont de shift."},
+    {id:"K19", text:"Dit was het moment dat ze wist dat het anders kon. Niet toen {verwachting}, maar toen {onverwacht moment}", tier:"MH", phases:["F3"], instruction:"Het onverwachte moment maakt het filmisch. Beschrijf de scène."},
+    {id:"K20", text:"{Voornaam} twijfelde {X tijd}. Haar resultaat na {Y tijd}: {concreet getal/shift}", tier:"A", phases:["F4"], instruction:"De twijfeltijd maakt het menselijk. Het resultaat maakt het urgent voor wie nu twijfelt."}
+  ],
+  visie: [
+    {id:"V1", text:"Wat ik dacht over {X} bleek exact zo te zijn — dus je hoeft {Y} echt niet meer te geloven", tier:"A", phases:["F2"], instruction:"Jouw ervaring bevestigt het. De lezer kan stoppen met twijfelen."},
+    {id:"V2", text:"De grootste misvatting over {populaire trend/methode}", tier:"A", phases:["F2"], instruction:"Wees specifiek over de trend. Noem 'm bij naam."},
+    {id:"V3", text:"Je denkt dat je {ultra-specifiek gangbaar gedrag} moet doen, maar wat je echt nodig hebt is {shift}", tier:"A", phases:["F2"], instruction:"ULTRA specifiek. 'Je denkt dat je je eet-dagboek moet invullen' of 'Je denkt dat je elke dag moet posten'."},
+    {id:"V4", text:"Iedereen denkt dat {Y} het probleem is, maar het komt door {Z} dat je nog niet {verlangen}", tier:"A", phases:["F2"], instruction:"Y = het symptoom. Z = jouw diagnose. Dit is de kern van je expertise."},
+    {id:"V5", text:"Voor iedereen die {X} wil maar ook zeker {Y — de paradox}", tier:"MH", phases:["F2","F4"], instruction:"De paradox herkennen is de hook. Ze willen schalen maar ook vrij zijn. Ze willen verkopen maar niet pushen."},
+    {id:"V6", text:"Na {X} klanten/jaren/nee's blijkt dit de echte reden dat {verlangen} er nog niet is", tier:"A", phases:["F2"], instruction:"Het aantal geeft autoriteit. De echte reden is jouw diagnose."},
+    {id:"V7", text:"Dit is mijn geheim over {X}, want het zit niet in {wat iedereen denkt}", tier:"A", phases:["F2"], instruction:"Het 'geheim' belooft exclusiviteit. Het 'niet in' creëert de shift."},
+    {id:"V8", text:"Dit is wat {thema} wel is en dat is wat {thema} niet is", tier:"A", phases:["F1","F2"], instruction:"Herdefinieer het concept. Neem eigenaarschap over de definitie."},
+    {id:"V9", text:"De echte reden waarom je nog niet {gewenst resultaat}", tier:"A", phases:["F2","F4"], instruction:"De 'echte' reden is je diagnose. Niet het symptoom."},
+    {id:"V10", text:"Stop met zoeken naar {gangbare oplossing}", tier:"A", phases:["F2"], instruction:"Provocerend. Wat is de oplossing die iedereen zoekt maar die niet werkt?"},
+    {id:"V11", text:"{X} is goed voor je ego maar {Y} is goed voor je bankrekening", tier:"A", phases:["F2"], instruction:"Het contrast. Ego vs resultaat. Welke twee dingen staan tegenover elkaar in jouw niche?"},
+    {id:"V12", text:"Je kunt niet {identiteit A} zijn in een {omgeving B}", tier:"MH", phases:["F2"], instruction:"Omgeving bepaalt identiteit. Welke mismatch zie je bij je klanten?"},
+    {id:"V13", text:"Stelling: \"{bold uitspraak over de markt}\"", tier:"A", phases:["F1","F2"], instruction:"Eén zin. Bold. Confronterend. Iets waar de helft het mee eens is en de andere helft niet."},
+    {id:"V14", text:"Er is een nieuw {tijdperk/bewustzijn} rondom {thema} en dit is wat ik voorspel", tier:"MH", phases:["F1"], instruction:"Positioneer jezelf als visionair. Wat zie jij aankomen?"},
+    {id:"V15", text:"{concept A} vs {concept B}", tier:"A", phases:["F2"], instruction:"Het VS-format werkt visueel en inhoudelijk. Twee concepten naast elkaar."},
+    {id:"V16", text:"Ik krijg buikpijn van {X — wat je iedereen ziet doen}. Geef mij maar {Y}", tier:"A", phases:["F1","F2"], instruction:"Emotioneel en persoonlijk. De buikpijn is echt. Het alternatief is jouw IP."},
+    {id:"V17", text:"Het niet hebben van {oplossing} kostte me dit jaar al {bedrag/consequentie}", tier:"MH", phases:["F4"], instruction:"Maak de kosten concreet. Geld, tijd, energie, gemiste kansen."},
+    {id:"V18", text:"Als er nog 1x iemand {gangbaar advies geeft} dan ga ik {emotionele reactie}. Dit is waarom het niet werkt", tier:"A", phases:["F2"], instruction:"De irritatie is echt. Humor mag. De uitleg erna is je expertise."},
+    {id:"V19", text:"Iedereen praat over {trend}. Niemand praat over {wat er echt toe doet}", tier:"A", phases:["F1","F2"], instruction:"De trend bij naam noemen. Het onbesproken ding is jouw inzicht."},
+    {id:"V20", text:"Dit is geen {wat het lijkt}. Dit is {wat het echt is}", tier:"A", phases:["F1"], instruction:"Herdefinieer. Neem het narratief over."},
+    {id:"V21", text:"Je bent niet {label dat ze zichzelf geeft}. Je bent {confronterende herdefinitie}", tier:"MH", phases:["F2"], instruction:"Het label herkennen en herdefinieren. 'Je bent niet te duur. Je bent te onzichtbaar.'"},
+    {id:"V22", text:"Het probleem is niet dat je {symptoom}. Het probleem is dat je {diagnose}", tier:"A", phases:["F2"], instruction:"Symptoom vs diagnose. De kern van je IP."},
+    {id:"V23", text:"Als {gangbaar advies} zou werken, had iedereen al {resultaat}", tier:"A", phases:["F2"], instruction:"Simpele logica die niet te weerleggen is. Krachtig als opener."}
+  ],
+  help: [
+    {id:"H1", text:"Dit is wat ik {X tijd} geleden had willen weten voordat ik {Y} deed", tier:"A", phases:["F2"], instruction:"De tijd maakt het recent en relevant. De actie moet herkenbaar zijn voor je klant."},
+    {id:"H2", text:"Ik had helemaal geen {gangbare diagnose} — het was veel simpeler", tier:"A", phases:["F2"], instruction:"De gangbare diagnose is wat je klant nu denkt. Het simpelere antwoord is jouw expertise."},
+    {id:"H3", text:"Ik deed {X} voor {korte periode} en had nooit verwacht dat de uitkomst zo {onverwacht} was", tier:"L", phases:["F2"], instruction:"Het onverwachte maakt het deelbaar. Wat was het resultaat dat je zelf niet zag aankomen?"},
+    {id:"H4", text:"{Resultaat}. Dit is wat je doet", tier:"L", phases:["F2"], instruction:"Resultaat eerst. Actie daarna. Kort en krachtig."},
+    {id:"H5", text:"Stop met {gangbare aanpak} als je {resultaat} wilt bereiken", tier:"A", phases:["F2"], instruction:"De confrontatie zit in het stoppen. Wat moet ze laten?"},
+    {id:"H6", text:"De beste manier om {resultaat} als je {situatie/bezwaar} voelt", tier:"A", phases:["F2"], instruction:"Het bezwaar erkennen maakt het relevant. De oplossing is je waarde."},
+    {id:"H7", text:"Minder {input} en toch meer {output}?", tier:"A", phases:["F2"], instruction:"Het contrast is de belofte. Minder posten, meer klanten. Minder uren, meer omzet."},
+    {id:"H8", text:"Van {situatie A} naar {situatie B} zonder {grootste bezwaar}", tier:"A", phases:["F1","F2"], instruction:"Het 'zonder' ontmantelt het bezwaar. Kies het bezwaar dat je klant het vaakst noemt."},
+    {id:"H9", text:"Van {situatie A} naar {situatie B} in {verrassend korte tijd}", tier:"LM", phases:["F1"], instruction:"De verrassende tijd maakt het geloofwaardig én aantrekkelijk."},
+    {id:"H10", text:"Van {situatie A} naar {situatie B} door {onverwachte aanpak}", tier:"A", phases:["F2"], instruction:"De onverwachte aanpak is jouw methode. Het verrassende maakt het klikwaardig."},
+    {id:"H11", text:"{Verlangen} in {korte tijd} per dag", tier:"L", phases:["F2"], instruction:"Korte tijd = laagdrempelig. 5 minuten, 10 minuten, 1 uur."},
+    {id:"H12", text:"Dit is wat ik NIET doe voor {resultaat} — dit zijn mijn {X} non-negotiables als ik voor {Y} ga", tier:"LM", phases:["F2"], instruction:"De 'niet' is sterker dan de 'wel'. Wat laat je bewust weg?"},
+    {id:"H13", text:"De 1-uur audit om {resultaat}", tier:"LM", phases:["F2"], instruction:"1 uur = concreet en afgebakend. De audit belooft helderheid."},
+    {id:"H14", text:"Hoe ik {groot aantal} klanten hielp om {resultaat}", tier:"MH", phases:["F2","F3"], instruction:"Het getal geeft autoriteit. Het resultaat is de belofte."},
+    {id:"H15", text:"Dit is de harde waarheid over {thema} die ik te leren had", tier:"A", phases:["F2"], instruction:"'Die ik te leren had' maakt het persoonlijk. Het is jouw ervaring, niet een preek."},
+    {id:"H16", text:"Als je {X} wilt, moet je niet {Y} doen maar {Z}", tier:"A", phases:["F2"], instruction:"De shift van Y naar Z is je diagnose. Helder en confronterend."},
+    {id:"H17", text:"Deze vraag stelde ze me elke keer als ze ging uitverkopen", tier:"MH", phases:["F2"], instruction:"De vraag is de hook. Het 'elke keer uitverkopen' is het bewijs."},
+    {id:"H18", text:"Dit is het verschil tussen {expert die resultaat heeft} en {expert die het niet heeft}", tier:"MH", phases:["F2"], instruction:"Scherp contrast. De lezer plaatst zichzelf in een van de twee kampen."},
+    {id:"H19", text:"Dit is hoe je een {specifiek pijnpunt} voorkomt", tier:"A", phases:["F2"], instruction:"Noem het pijnpunt bij naam. 'Lanceer-burnout', 'content-moeheid', 'prijsangst'."},
+    {id:"H20", text:"Je doet {gangbaar gedrag}. Je denkt dat het {reden} is. Het echte probleem: {diagnose}", tier:"A", phases:["F2"], instruction:"Drie zinnen. Gedrag → aanname → diagnose. De structuur dwingt helderheid af."},
+    {id:"H21", text:"De ene vraag die bepaalt of {aanpak} gaat werken voor jou", tier:"A", phases:["F2"], instruction:"Eén vraag. De vraag zelf is het inzicht."},
+    {id:"H22", text:"Ik gaf dit onorthodoxe advies aan {specifiek type persoon}. Binnen {tijd} had ze {concreet resultaat}", tier:"A", phases:["F2","F3"], instruction:"'Onorthodox' wekt nieuwsgierigheid. Het specifieke type persoon maakt het herkenbaar."},
+    {id:"H23", text:"Voel je je {herkenbaar gevoel} wanneer je {herkenbare situatie}? Dit is waarom", tier:"A", phases:["F2"], instruction:"Het gevoel moet specifiek zijn. Niet 'onzeker' maar 'alsof je optreed voor een leeg publiek'."},
+    {id:"H24", text:"Waarom {Y} niet werkte toen ik {rauwe situatie}", tier:"A", phases:["F2"], instruction:"De rauwe situatie maakt het echt. 'Geen euro cashflow meer', 'mijn derde burn-out', 'nul aanmeldingen'."},
+    {id:"H25", text:"Dit is hoe je {concreet resultaat} in {korte tijd}", tier:"A", phases:["F2"], instruction:"Specifiek. 'In 3 dagen 4 klanten hun schermtijd laten halveren.' Niet 'meer resultaat'."},
+    {id:"H26", text:"Dit is hoe je {resultaat} als je {zo bent}", tier:"A", phases:["F2"], instruction:"Identiteit + resultaat. 'Als ondernemend ADHD'er', 'als introvert', 'als moeder van 3'."},
+    {id:"H27", text:"{Resultaat} — Claude's geheime set-up / {X} dingen die ik tegen Claude zeg zodat {Y}", tier:"LM", phases:["F2"], instruction:"AI als tool. Laat zien hoe je het gebruikt. Praktisch en deelbaar."},
+    {id:"H28", text:"Ik heb/voel/denk {symptoom} — dit zijn {X} dingen die me helpen naar {gewenste staat}", tier:"A", phases:["F2"], instruction:"Begin bij het symptoom. De dingen zijn de oplossing. Persoonlijk en herkenbaar."},
+    {id:"H29", text:"{Resultaat}, waarom het ineens met 2 vingers in mijn neus lukte", tier:"A", phases:["F2","F3"], instruction:"De ease is de hook. Wat was het moment dat het moeiteloos werd?"},
+    {id:"H30", text:"{Situatie} deed ik dit en het gebeurde nooit meer", tier:"A", phases:["F2"], instruction:"De situatie moet herkenbaar zijn. 'Na de 4de klant die dacht dat ik de ICT helpdesk was.'"},
+    {id:"H31", text:"Doe {X} als je {uber-specifiek resultaat} wilt", tier:"L", phases:["F2"], instruction:"UBER specifiek. 'Morgen voor 12 uur 3 viral trial reels.' Niet 'meer bereik'."},
+    {id:"H32", text:"Bizar — doe dit of je krijgt {ding wat ze zeker niet willen}", tier:"A", phases:["F2"], instruction:"De 'of' is de urgentie. Het ongewenste resultaat drijft de actie."},
+    {id:"H33", text:"Shhh ik heb een juicy geheim waarmee ik {resultaat}", tier:"A", phases:["F2"], instruction:"Speels en persoonlijk. Het geheim moet het waard zijn."},
+    {id:"H34", text:"{X} types {mails/posts/funnels} die ik elke {periode} stuur, zelfs dwars door een promo heen, zodat {resultaat}", tier:"MH", phases:["F2"], instruction:"Het 'zelfs dwars door een promo heen' toont consistentie. De types zijn je systeem."},
+    {id:"H35", text:"Dit is hoe je {resultaat} in {korte tijd} krijgt (secret shortcut)", tier:"LM", phases:["F2"], instruction:"De shortcut belooft snelheid. Lever ook echt de shortcut."}
+  ],
+  autoriteit: [
+    {id:"A1", text:"Iedereen juicht als je {X} haalt, maar ik vertel je vast {jouw visie}", tier:"A", phases:["F2","F4"], instruction:"De 'maar' is de confrontatie. Wat ziet niemand anders?"},
+    {id:"A2", text:"{X} {specifieke routines/lessen} van een {specifiek autoriteit-frame}", tier:"A", phases:["F2"], instruction:"Specifiek frame. 'Vrouw met 2 bedrijven, 3 pubers en een mini-boerderij.' Niet 'succesvolle ondernemer'."},
+    {id:"A3", text:"Snel voordat ik me bedenk — steel mijn nr. 1 {hack/aanpak} waardoor {concreet rauw resultaat}", tier:"LM", phases:["F2"], instruction:"De urgentie is speels. Het resultaat moet rauw en echt zijn."},
+    {id:"A4", text:"Waarom je {klant-type} nooit {X} doet zonder {Y}", tier:"A", phases:["F2"], instruction:"De 'nooit' is absoluut. De Y is jouw inzicht."},
+    {id:"A5", text:"Niemand vertelt je dit, maar dat je nog geen {Y} hebt komt niet door {Z}", tier:"A", phases:["F2","F4"], instruction:"De 'niemand vertelt je' positioneert jou als de eerlijke stem. Z is het symptoom, de post onthult de echte reden."},
+    {id:"A6", text:"Waarom heb ik dit nog nooit eerder gehoord?", tier:"A", phases:["F2"], instruction:"Retorische vraag die nieuwsgierigheid wekt. De post levert het antwoord."},
+    {id:"A7", text:"\"{Letterlijke quote klant}\" + dit is wat ik écht dacht / dit is wat ik zei", tier:"A", phases:["F2","F3"], instruction:"De quote is rauw. Jouw reactie is de expertise. Het contrast is de kracht."},
+    {id:"A8", text:"Dit zijn de eerste {X} {dingen/teamleden/stappen} die zorgen voor {resultaat} in plaats van {kosten}", tier:"MH", phases:["F2"], instruction:"Het 'in plaats van kosten' is de shift. Investering vs kostenpost."},
+    {id:"A9", text:"Dit is niet voor {tegenhanger ideale klant}", tier:"A", phases:["F4"], instruction:"Exclusie is positionering. Wie sluit je uit en waarom?"},
+    {id:"A10", text:"{Aantal} lessen uit {concreet groot resultaat}", tier:"A", phases:["F2","F3"], instruction:"Het resultaat moet concreet zijn. '300k jaar', '171 verkopen', '50 klanten in 3 maanden'."},
+    {id:"A11", text:"Ik heb {X} keer gezien dat {patroon}. Dit is wat het écht betekent", tier:"MH", phases:["F2"], instruction:"Het getal geeft gewicht. Het patroon is je expertise."},
+    {id:"A12", text:"Je vertelt jezelf dat {excuus}. Wat ik zie is {confronterende waarheid}", tier:"MH", phases:["F2","F4"], instruction:"Het excuus moet herkenbaar zijn. De waarheid moet scherp maar liefdevol zijn."},
+    {id:"A13", text:"Deze vraag zet in sessie 1 alle {funnels/strategieën/overtuigingen} op zijn kop", tier:"MH", phases:["F2"], instruction:"De vraag onthullen in de post. De impact tonen via klantreactie."},
+    {id:"A14", text:"Ik zeg dit tegen elke {type klant} die bij me komt: {bold statement} — zodat ze {resultaat}", tier:"A", phases:["F2"], instruction:"Het statement is je handtekening. Het 'zodat' is de waarde."},
+    {id:"A15", text:"Ik deed/ontdekte {bizar ding} en stopte gelijk met {gangbare aanpak}", tier:"A", phases:["F2"], instruction:"Het bizarre maakt het klikbaar. Het stoppen is de les."},
+    {id:"A16", text:"\"{Letterlijke pijn/bezwaar van klant}\" — de bezwaren letterlijk neerzetten, uitleg in de caption", tier:"A", phases:["F2","F4"], instruction:"De quote als visual of eerste zin. Rauw en ongefilterd. De uitleg ontkracht het bezwaar."}
+  ],
+  hub: [
+    {id:"HB1", text:"Hoe je van {X} {Y} maakt in {format}", tier:"LM", phases:["F1","F2","F3","F4"], instruction:"Het format maakt het hapklaar. Slides, minuten, stappen."},
+    {id:"HB2", text:"De {periode}-roadmap naar {resultaat} — Deel {X}", tier:"LM", phases:["F1","F2","F3","F4"], instruction:"Serie-format. Het deel-nummer schept verwachting."},
+    {id:"HB3", text:"De {aantal} vragen die onze klanten zichzelf elke {periode} stellen", tier:"MH", phases:["F1","F2","F3","F4"], instruction:"De vragen onthullen het denkniveau van je klanten. Social proof."},
+    {id:"HB4", text:"Wil je zien hoe ik {resultaat} behaalde in {korte tijd}?", tier:"A", phases:["F1","F2","F3","F4"], instruction:"De vraag is de hook. De post is het bewijs."},
+    {id:"HB5", text:"Wil je weten waar ik mee stopte waardoor {resultaat}?", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Het stoppen is altijd interessanter dan het starten."},
+    {id:"HB6", text:"De serie waar ik al {tijd} aan werk. Vandaag deel {X}: {thema}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Geeft gewicht en verwachting. De serie is je signature."},
+    {id:"HB7", text:"Elke {dag/week} beantwoord ik 1 vraag van {type klant}. Vandaag: {vraag}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Community-driven content. De vraag is de hook."},
+    {id:"HB8", text:"{Serie-naam} #{nummer}: {prikkelende titel}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"De serie-naam is je merk. De titel moet op zichzelf staan."},
+    {id:"HB9", text:"Dag {X} van {challenge/experiment/ritual}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Het dagnummer schept commitment en nieuwsgierigheid. Mensen willen het einde zien."},
+    {id:"HB10", text:"{Maand}-horoscoop voor {doelgroep}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Speels format. De horoscoop is het voertuig, jouw inzicht is de inhoud."},
+    {id:"HB11", text:"Voorspelling: {bold voorspelling over de markt/niche}", tier:"MH", phases:["F1","F2","F3","F4"], instruction:"Positioneert je als visionair. De voorspelling moet gedurfd zijn."},
+    {id:"HB12", text:"Zondag ritual {nummer} voor {resultaat}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Ritueel-format. Het nummer schept een serie. De zondag is het anker."}
+  ],
+  hot: [
+    {id:"HT1", text:"Dit bericht is alleen voor {ideale klant} die {X} willen", tier:"A", phases:["F1","F4"], instruction:"Filter hard. Wie IS dit voor? Het verlangen moet specifiek zijn."},
+    {id:"HT2", text:"Alleen lezen als je {mijlpaal/situatie} hebt/wilt", tier:"A", phases:["F1","F4"], instruction:"Exclusie als hook. De mijlpaal filtert je ideale klant eruit."},
+    {id:"HT3", text:"Ik zoek {aantal} {type klant} die in de komende {periode} {verlangen}", tier:"LM", phases:["F4"], instruction:"Concreet aantal. Specifiek type. Specifieke periode. Urgentie door schaarste."},
+    {id:"HT4", text:"Dit gaat al je {veel voorkomend probleem} in {periode} oplossen", tier:"A", phases:["F1","F2"], instruction:"Bold belofte. De periode maakt het geloofwaardig."},
+    {id:"HT5", text:"{Resultaat + context + boodschap} → Comment \"{triggerwoord}\" voor {X} dingen die {resultaat}", tier:"LM", phases:["F3","F4"], instruction:"Caption EERST waarde leveren. Dan pas de CTA. Niet andersom."},
+    {id:"HT6", text:"Krijg direct toegang tot {resultaat — niet jouw tool, maar wat het oplevert}", tier:"L", phases:["F4"], instruction:"CTA-regel: altijd het resultaat, nooit de vorm. Niet 'download de PDF' maar 'ontdek waarom...'."},
+    {id:"HT7", text:"Ontdek waarom jouw {strategie/aanpak} niet {gewenst resultaat} oplevert", tier:"M", phases:["F2","F4"], instruction:"De 'waarom' belooft een diagnose. De aanpak moet specifiek zijn."},
+    {id:"HT8", text:"Aanvraag / wachtlijst / op uitnodiging", tier:"H", phases:["F4"], instruction:"Exclusiviteit. Geen uitleg nodig. De schaarsheid verkoopt."},
+    {id:"HT9", text:"Pak deze {X} dingen die je nu nog mist om {resultaat}", tier:"L", phases:["F2"], instruction:"'Pak' is actiever dan 'check'. De dingen beloven directe waarde."},
+    {id:"HT10", text:"DM me \"{triggerwoord}\" en ik stuur je {resultaat-belofte}", tier:"A", phases:["F1","F2","F3","F4"], instruction:"Het triggerwoord moet passen bij je thema. De belofte is het resultaat, niet het ding."},
+    {id:"HT11", text:"{Aantal} plekken. {Aantal} zijn weg. Dit is je moment", tier:"MH", phases:["F4"], instruction:"Echte schaarste. Alleen gebruiken als het klopt. Nep-schaarste vernietigt vertrouwen."},
+    {id:"HT12", text:"{X}x {concreet micro-resultaat}, ook met {rauwe realiteit}", tier:"L", phases:["F1","F4"], instruction:"'5x wakker worden zonder wallen, ook met 3 kids en een snurkende man.' De realiteit maakt het herkenbaar."},
+    {id:"HT13", text:"Bye bye {probleem} — {X} {routines/stappen} die je {positiever resultaat} maken dan {herkenbare coping}", tier:"L", phases:["F1","F4"], instruction:"Speels en concreet. De vergelijking met de coping voegt humor toe."},
+    {id:"HT14", text:"{X}x {seizoen/moment} {type} haakjes om je {specifiek aanbod} te verkopen", tier:"LM", phases:["F4"], instruction:"Meta maar waardevol. De seizoensgebondenheid creëert urgentie."},
+    {id:"HT15", text:"Gebruik deze {type} hooks om je {metric} nog deze week te verdubbelen", tier:"LM", phases:["F4"], instruction:"De tijdsdruk ('deze week') maakt het urgent. De metric moet concreet zijn."}
+  ]
+};
+
+// ============================================
+// 7S-FORMULE — ARC ENGINE
+// 7 stappen, vaste volgorde, geen shuffle
+// Spark → Story → Solution → Shine & Showcase → Social Seduction → Shifts → Seal the Deal
+// ============================================
+
+// Each S-formule step: which content types are appropriate
+// Archetype adjusts the order/emphasis within each step
+const DROP_IT_STEPS = {
+  SPARK: {
+    name: 'Spark',
+    intent: 'OMG-moment + groot resultaat + zonder grootste bezwaar',
+    feel: '"Wacht — kan dat? Vertel me meer."',
+    phase: 'F1',
+    types: {
+      maven:  ['hot','persoonlijk','visie'],
+      muse:   ['persoonlijk','hot','visie'],
+      maison: ['hot','klantverhalen','persoonlijk']
+    }
+  },
+  STORY: {
+    name: 'Story',
+    intent: 'Waarom dit aanbod er is — jouw why',
+    feel: '"Aha, ik snap waar zij vandaan komt."',
+    phase: 'F1',
+    types: {
+      maven:  ['persoonlijk','visie'],
+      muse:   ['persoonlijk','bts','visie'],
+      maison: ['persoonlijk','visie','klantverhalen']
+    }
+  },
+  SOLUTION: {
+    name: 'Solution',
+    intent: 'Perspectief verschuiven — het ECHTE probleem ontmaskeren',
+    feel: '"Oh — mijn probleem is iets anders dan ik dacht."',
+    phase: 'F2',
+    types: {
+      maven:  ['help','autoriteit','visie'],
+      muse:   ['visie','help','persoonlijk'],
+      maison: ['help','visie','autoriteit']
+    }
+  },
+  SHINE_SHOWCASE: {
+    name: 'Shine & Showcase',
+    intent: 'Resultaten van anderen + jij als bewijs + dit staat er voor je klaar',
+    feel: '"Het werkt. Zij doet wat ze zegt."',
+    phase: 'F3',
+    types: {
+      maven:  ['klantverhalen','autoriteit','bts','persoonlijk'],
+      muse:   ['persoonlijk','klantverhalen','bts'],
+      maison: ['klantverhalen','persoonlijk','bts']
+    }
+  },
+  SOCIAL_SEDUCTION: {
+    name: 'Social Seduction',
+    intent: 'Community — wie zijn ze, wat gebeurt er, wat maakt het anders',
+    feel: '"Daar wil ik bij horen."',
+    phase: 'F3',
+    types: {
+      maven:  ['hub','klantverhalen','bts'],
+      muse:   ['bts','hub','persoonlijk'],
+      maison: ['klantverhalen','hub','bts']
+    }
+  },
+  SHIFTS: {
+    name: 'Shifts',
+    intent: 'Bezwaren ontmaskeren — letterlijk benoemen of casestudy',
+    feel: '"Ze leest mijn gedachten."',
+    phase: 'F4',
+    types: {
+      maven:  ['autoriteit','klantverhalen','visie'],
+      muse:   ['persoonlijk','klantverhalen','visie'],
+      maison: ['klantverhalen','autoriteit','visie']
+    }
+  },
+  SEAL_THE_DEAL: {
+    name: 'Seal the Deal',
+    intent: 'Urgentie — prijs omhoog, deuren dicht, datum, bonus weg',
+    feel: '"Ik moet nu beslissen."',
+    phase: 'F4',
+    types: {
+      maven:  ['autoriteit','klantverhalen','visie'],
+      muse:   ['persoonlijk','klantverhalen','visie'],
+      maison: ['klantverhalen','autoriteit','visie']
+    }
+  }
+};
+
+// Phase structure: how the 7 steps map to 4 phases
+// proportion = how much of the phase this step takes
+const PHASE_STRUCTURE = {
+  F1: [
+    {step: 'SPARK', proportion: 0.5},
+    {step: 'STORY', proportion: 0.5}
+  ],
+  F2: [
+    {step: 'SOLUTION', proportion: 1.0}
+  ],
+  F3: [
+    {step: 'SHINE_SHOWCASE',  proportion: 0.5},
+    {step: 'SOCIAL_SEDUCTION', proportion: 0.5}
+  ],
+  F4: [
+    {step: 'SHIFTS',        proportion: 0.5},
+    {step: 'SEAL_THE_DEAL', proportion: 0.5}
+  ]
+};
+
+const PHASE_META = {
+  F1: {name:'Spark + Story', color:'var(--phase1)'},
+  F2: {name:'Solution',      color:'var(--phase2)'},
+  F3: {name:'Shine & Social', color:'var(--phase3)'},
+  F4: {name:'Shifts + Seal',  color:'var(--phase4)'}
+};
+
+const CONTENT_TYPE_LABELS = {
+  persoonlijk: "Persoonlijk",
+  bts: "BTS / Life",
+  klantverhalen: "Klantverhalen",
+  visie: "Visie",
+  help: "Help",
+  autoriteit: "Autoriteit",
+  hub: "Hub",
+  hot: "HOT"
+};
+
+const CONTENT_TYPE_CATEGORIES = {
+  persoonlijk: "HART", bts: "HART", klantverhalen: "HART", visie: "HART",
+  help: "HELP", autoriteit: "HELP", hub: "HUB", hot: "HOT"
+};
+
+const TYPE_COLORS = {
+  persoonlijk:"#b8913a", bts:"#7a9e3a", klantverhalen:"#3a9e7a", visie:"#9e3a7a",
+  help:"#6b5ec8", autoriteit:"#3a7a9e", hub:"#9e6b3a", hot:"#c94444"
+};
+
+// ============================================
+// STATE
+// ============================================
+let state = { archetype: null, tier: null };
+let currentPlan = null;
+let currentUserInput = null;
+let activeCard = null;
+
+// ============================================
+// PLACEHOLDER ENGINE
+// Maps user MOMENTUM-context into hook placeholders
+// ============================================
+
+function parseVerlangens(raw) {
+  if (!raw || raw === '[verlangens]') return [];
+  return raw.split('\n').map(v => v.replace(/^\d+[\.\)]\s*/, '').trim()).filter(v => v);
+}
+
+// Build the context map from user input
+function buildContextMap(userInput) {
+  if (!userInput) return {};
+  const verlangens = parseVerlangens(userInput.verlangens);
+  const map = {};
+  const add = (keys, label, value) => {
+    if (!value || value.startsWith('[')) return;
+    keys.forEach(k => { map[k.toLowerCase()] = {label, value}; });
+  };
+
+  add(['thema'], 'Thema', userInput.thema);
+  add(['aanbod','specifiek aanbod','programmanaam'], 'Aanbod', userInput.aanbod);
+  add(['verlangen','gewenst resultaat'], 'Verlangen', verlangens[0]);
+  add(['groot verlangen','grotere verlangen'], 'Grotere verlangen', userInput.grotereVerlangen);
+  add(['resultaat','groot resultaat'], 'Resultaat/verlangen', verlangens[0]);
+  add(['symptoom','gangbaar gedrag','oud gedrag'], 'Symptoom', userInput.symptoom);
+  add(['diagnose','confronterende waarheid'], 'Diagnose', userInput.diagnose);
+  add(['probleem','veel voorkomend probleem','gangbare diagnose','pijnpunt','specifiek pijnpunt'], 'GAP', userInput.gap);
+  add(['gangbare aanpak','gangbare oplossing','gangbaar advies','populaire trend/methode'], 'Marktirritatie', userInput.marktirritatie);
+
+  return map;
+}
+
+// Extract which placeholders in a hook text match user context
+function getContextHints(text, userInput) {
+  if (!userInput) return [];
+  const contextMap = buildContextMap(userInput);
+  const found = [];
+  const seen = new Set(); // avoid duplicate labels
+
+  // Find all {placeholder} patterns in the text
+  const matches = text.match(/\{[^}]+\}/g) || [];
+  matches.forEach(match => {
+    const key = match.slice(1, -1).toLowerCase();
+    if (contextMap[key] && !seen.has(contextMap[key].label)) {
+      seen.add(contextMap[key].label);
+      found.push(contextMap[key]);
+    }
+  });
+
+  return found;
+}
+
+function selectOption(el, field) {
+  const siblings = el.parentElement.querySelectorAll('.option-card');
+  siblings.forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  state[field] = el.dataset.value;
+}
+
+function updateCadans() {
+  document.getElementById('cadansValue').textContent = document.getElementById('cadans').value + 'x';
+}
+
+function addSubthema() {
+  const container = document.getElementById('subthemaContainer');
+  const count = container.querySelectorAll('.subthema-row').length + 1;
+  if (count > 6) return;
+  const row = document.createElement('div');
+  row.className = 'subthema-row';
+  row.innerHTML = `<span class="subthema-number">${count}.</span><input type="text" class="subthema-input" placeholder="Subthema ${count}">`;
+  container.appendChild(row);
+}
+
+function getSubthemas() {
+  const inputs = document.querySelectorAll('.subthema-input');
+  return Array.from(inputs).map(i => i.value.trim()).filter(v => v);
+}
+
+// ============================================
+// GENERATION ENGINE
+// ============================================
+
+function generate() {
+  if (!state.archetype || !state.tier) {
+    alert('Selecteer je archetype en tier');
+    return;
+  }
+
+  const cadans = parseInt(document.getElementById('cadans').value);
+  const arcWeeks = parseInt(document.getElementById('arcLength').value);
+  const totalPosts = cadans * arcWeeks;
+  const subthemas = getSubthemas();
+
+  const userInput = {
+    aanbod: document.getElementById('aanbod').value || '[je aanbod]',
+    thema: document.getElementById('thema').value || '[je thema]',
+    subthemas: subthemas,
+    verlangens: document.getElementById('verlangens').value || '[verlangens]',
+    grotereVerlangen: document.getElementById('grotereVerlangen').value || '[grotere verlangen]',
+    gap: document.getElementById('gap').value || '[GAP]',
+    symptoom: document.getElementById('symptoom').value || '[symptoom]',
+    diagnose: document.getElementById('diagnose').value || '[diagnose]',
+    marktirritatie: document.getElementById('marktirritatie').value || '[marktirritatie]'
+  };
+
+  // ---- 7S-FORMULE ENGINE: vaste volgorde, geen shuffle ----
+  const phases = ['F1','F2','F3','F4'];
+  const postsPerPhase = {};
+  let assigned = 0;
+  phases.forEach((p, i) => {
+    if (i < 3) {
+      postsPerPhase[p] = Math.round(totalPosts * 0.25);
+      assigned += postsPerPhase[p];
+    } else {
+      postsPerPhase[p] = totalPosts - assigned;
+    }
+  });
+
+  const plan = {};
+
+  phases.forEach(phase => {
+    const phasePosts = postsPerPhase[phase];
+    const structure = PHASE_STRUCTURE[phase];
+    const posts = [];
+    let dayCounter = 1;
+
+    // Divide posts among S-formule steps within this phase
+    let stepAssigned = 0;
+    structure.forEach((stepDef, stepIdx) => {
+      const stepInfo = DROP_IT_STEPS[stepDef.step];
+      let stepCount;
+      if (stepIdx < structure.length - 1) {
+        stepCount = Math.round(phasePosts * stepDef.proportion);
+        stepCount = Math.max(1, stepCount); // at least 1 post per step
+        stepAssigned += stepCount;
+      } else {
+        stepCount = phasePosts - stepAssigned;
+      }
+
+      // Get the preferred content types for this archetype in this step
+      const preferredTypes = stepInfo.types[state.archetype];
+
+      for (let i = 0; i < stepCount; i++) {
+        // Cycle through preferred types
+        const contentType = preferredTypes[i % preferredTypes.length];
+
+        posts.push({
+          type: contentType,
+          day: dayCounter++,
+          stepName: stepInfo.name,
+          stepIntent: stepInfo.intent,
+          stepFeel: stepInfo.feel,
+          hooks: getHooks(contentType, stepInfo.phase, state.tier, 3)
+        });
+      }
+    });
+
+    plan[phase] = {posts, postsCount: phasePosts};
+  });
+
+  // Assign subthemas in BLOCKS (clustered, not round-robin)
+  if (subthemas.length > 0) {
+    const allPosts = [];
+    phases.forEach(phase => plan[phase].posts.forEach(p => allPosts.push(p)));
+    const blockSize = Math.ceil(allPosts.length / subthemas.length);
+    allPosts.forEach((post, i) => {
+      const blockIdx = Math.min(Math.floor(i / blockSize), subthemas.length - 1);
+      post.subthema = subthemas[blockIdx];
+    });
+  }
+
+  currentPlan = plan;
+  currentUserInput = userInput;
+  renderOutput(plan, totalPosts, arcWeeks, cadans, userInput);
+}
+
+function getHooks(contentType, phase, tier, count) {
+  const pool = HOOKS[contentType] || [];
+
+  let matching = pool.filter(h => {
+    const phaseMatch = h.phases.includes(phase);
+    const tierMatch = h.tier === 'A' ||
+      (tier === 'low' && (h.tier === 'L' || h.tier === 'LM')) ||
+      (tier === 'mid' && (h.tier === 'M' || h.tier === 'LM' || h.tier === 'MH')) ||
+      (tier === 'high' && (h.tier === 'H' || h.tier === 'MH'));
+    return phaseMatch && tierMatch;
+  });
+
+  if (matching.length < count) {
+    matching = pool.filter(h => {
+      const tierMatch = h.tier === 'A' ||
+        (tier === 'low' && (h.tier === 'L' || h.tier === 'LM')) ||
+        (tier === 'mid' && (h.tier === 'M' || h.tier === 'LM' || h.tier === 'MH')) ||
+        (tier === 'high' && (h.tier === 'H' || h.tier === 'MH'));
+      return tierMatch;
+    });
+  }
+
+  const shuffled = matching.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+}
+
+// ============================================
+// RENDER: CALENDAR GRID
+// ============================================
+
+function renderOutput(plan, totalPosts, arcWeeks, cadans, userInput) {
+  const outputEl = document.getElementById('output');
+  const archLabel = state.archetype.charAt(0).toUpperCase() + state.archetype.slice(1);
+  const tierLabel = state.tier === 'low' ? 'Low (€22-€333)' : state.tier === 'mid' ? 'Mid (€500-€5k)' : 'High (€10k+)';
+
+  let html = `
+    <div class="output-header fade-in">
+      <h2>Jouw MOMENTUM-plan</h2>
+      <p class="meta">${archLabel} × ${tierLabel} × ${cadans}x/week × ${arcWeeks} weken = ${totalPosts} posts</p>
+      <p class="meta" style="margin-top:4px; color:var(--accent-text); font-weight:600;">${userInput.aanbod}</p>
+      ${userInput.subthemas.length > 0 ? `<p class="meta" style="margin-top:4px;">${userInput.thema} → ${userInput.subthemas.join(' · ')}</p>` : ''}
+      <div class="mix-bar">
+  `;
+
+  // Show 7S arc as color bar
+  const arcColors = {phase1:'var(--phase1)', phase2:'var(--phase2)', phase3:'var(--phase3)', phase4:'var(--phase4)'};
+  html += `<div style="width:25%; background:var(--phase1);" title="Spark + Story"></div>`;
+  html += `<div style="width:25%; background:var(--phase2);" title="Solution"></div>`;
+  html += `<div style="width:25%; background:var(--phase3);" title="Shine & Showcase + Social Seduction"></div>`;
+  html += `<div style="width:25%; background:var(--phase4);" title="Shifts + Seal the Deal"></div>`;
+
+  html += `</div>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:12px;">
+        <span style="font-size:10px; color:var(--phase1); font-weight:600;">Spark + Story</span>
+        <span style="font-size:10px; color:var(--phase2); font-weight:600;">Solution</span>
+        <span style="font-size:10px; color:var(--phase3); font-weight:600;">Shine & Social Seduction</span>
+        <span style="font-size:10px; color:var(--phase4); font-weight:600;">Shifts + Seal the Deal</span>
+      </div>
+    </div>`;
+
+  // Render calendar per phase
+  let globalDay = 0;
+  const phases = ['F1','F2','F3','F4'];
+
+  phases.forEach((phase, phaseIdx) => {
+    const p = plan[phase];
+    const meta = PHASE_META[phase];
+    const phaseClass = phase.toLowerCase();
+
+    // Week labels
+    const weekStart = Math.floor(phaseIdx * arcWeeks / 4) + 1;
+    const weekEnd = Math.floor((phaseIdx + 1) * arcWeeks / 4);
+    const weekLabel = weekStart === weekEnd ? `Week ${weekStart}` : `Week ${weekStart}-${weekEnd}`;
+
+    // Get the S-formule steps in this phase for the header
+    const stepNames = PHASE_STRUCTURE[phase].map(s => s.step).join(' + ');
+    const stepIntents = PHASE_STRUCTURE[phase].map(s => DROP_IT_STEPS[s.step].intent).join(' → ');
+
+    html += `
+      <div class="week-section fade-in">
+        <div class="week-header ${phaseClass}">
+          <div>
+            <div class="phase-name">${stepNames}</div>
+            <div class="phase-intent">${stepIntents}</div>
+          </div>
+          <div class="phase-week-label">${weekLabel} · ${p.postsCount} posts</div>
+        </div>
+        <div class="cal-grid" style="grid-template-columns: repeat(${Math.min(p.postsCount, cadans)}, 1fr);">
+    `;
+
+    p.posts.forEach((post, postIdx) => {
+      globalDay++;
+      const typeLabel = CONTENT_TYPE_LABELS[post.type];
+      const category = CONTENT_TYPE_CATEGORIES[post.type];
+      const color = TYPE_COLORS[post.type];
+      const cardId = `card-${phase}-${postIdx}`;
+
+      html += `
+          <div class="cal-card" id="${cardId}" onclick="toggleHooks('${cardId}', '${phase}', ${postIdx})">
+            <div class="cal-card-top">
+              <span class="cal-day">Post ${globalDay}</span>
+              <span class="cal-type-tag" style="background:${color}10; border-color:${color}40; color:${color};">${typeLabel}</span>
+              <span class="cal-category">${category}</span>
+            </div>
+            <div style="font-size:11px; font-weight:700; color:var(--text); margin-bottom:2px;">${post.stepName}</div>
+            <div style="font-size:10px; color:var(--text-dim); line-height:1.3;">${post.stepFeel}</div>
+            ${post.subthema ? `<div class="cal-subthema">${post.subthema}</div>` : ''}
+          </div>
+      `;
+    });
+
+    html += `</div><div id="hooks-container-${phase}"></div></div>`;
+  });
+
+  // Actions
+  html += `
+    <div class="output-actions">
+      <button class="btn-secondary" onclick="window.print()">Print / PDF</button>
+      <button class="btn-secondary" onclick="generate()">Nieuw plan</button>
+    </div>
+  `;
+
+  outputEl.innerHTML = html;
+  outputEl.classList.add('visible');
+  outputEl.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+function toggleHooks(cardId, phase, postIdx) {
+  const card = document.getElementById(cardId);
+  const container = document.getElementById(`hooks-container-${phase}`);
+  const post = currentPlan[phase].posts[postIdx];
+
+  // If same card is active, close it
+  if (activeCard === cardId) {
+    card.classList.remove('active');
+    container.innerHTML = '';
+    activeCard = null;
+    return;
+  }
+
+  // Deactivate previous
+  if (activeCard) {
+    const prev = document.getElementById(activeCard);
+    if (prev) prev.classList.remove('active');
+    // Clear all hook containers
+    ['F1','F2','F3','F4'].forEach(p => {
+      document.getElementById(`hooks-container-${p}`).innerHTML = '';
+    });
+  }
+
+  card.classList.add('active');
+  activeCard = cardId;
+
+  // Render hooks with context hints below
+  let hooksHtml = `<div class="hooks-panel">`;
+  hooksHtml += `<div style="font-size:12px; color:var(--text-muted); margin-bottom:10px; font-weight:600;">3 haakje-suggesties voor deze post:</div>`;
+
+  post.hooks.forEach((hook, i) => {
+    const hints = getContextHints(hook.text, currentUserInput);
+    hooksHtml += `
+      <div class="hook-suggestion">
+        <div class="hook-text"><span class="hook-number">${i+1}</span>${hook.text}</div>
+        <div class="hook-instruction">${hook.instruction}</div>
+        ${hints.length > 0 ? `<div class="context-hints">${hints.map(h => `<div class="context-hint"><span class="context-hint-label">${h.label}:</span> ${h.value}</div>`).join('')}</div>` : ''}
+      </div>
+    `;
+  });
+
+  hooksHtml += `
+    <div class="hooks-panel-actions">
+      <button class="btn-shuffle-hooks" onclick="shufflePostHooks(event, '${phase}', ${postIdx}, '${cardId}')">Shuffle haakjes</button>
+    </div>
+  </div>`;
+
+  container.innerHTML = hooksHtml;
+
+  // Scroll to hooks
+  container.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+}
+
+function shufflePostHooks(event, phase, postIdx, cardId) {
+  event.stopPropagation();
+  const post = currentPlan[phase].posts[postIdx];
+  post.hooks = getHooks(post.type, phase, state.tier, 3);
+  // Re-render hooks without toggling closed
+  const container = document.getElementById(`hooks-container-${phase}`);
+  let hooksHtml = `<div class="hooks-panel">`;
+  hooksHtml += `<div style="font-size:12px; color:var(--text-muted); margin-bottom:10px; font-weight:600;">3 haakje-suggesties voor deze post:</div>`;
+  post.hooks.forEach((hook, i) => {
+    const hints = getContextHints(hook.text, currentUserInput);
+    hooksHtml += `
+      <div class="hook-suggestion">
+        <div class="hook-text"><span class="hook-number">${i+1}</span>${hook.text}</div>
+        <div class="hook-instruction">${hook.instruction}</div>
+        ${hints.length > 0 ? `<div class="context-hints">${hints.map(h => `<div class="context-hint"><span class="context-hint-label">${h.label}:</span> ${h.value}</div>`).join('')}</div>` : ''}
+      </div>`;
+  });
+  hooksHtml += `
+    <div class="hooks-panel-actions">
+      <button class="btn-shuffle-hooks" onclick="shufflePostHooks(event, '${phase}', ${postIdx}, '${cardId}')">Shuffle haakjes</button>
+    </div></div>`;
+  container.innerHTML = hooksHtml;
+}
+</script>
+</body>
+</html>
