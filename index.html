@@ -493,6 +493,51 @@
     to { opacity: 1; transform: translateY(0); }
   }
   .fade-in { animation: fadeIn 0.4s ease-out; }
+
+  /* PRINT VIEW (PDF met alles uitgeklapt) */
+  #print-view { display: none; }
+
+  .print-phase { margin-bottom: 24px; page-break-inside: avoid; }
+  .print-phase-header {
+    padding: 10px 16px;
+    border-left: 4px solid var(--accent);
+    background: var(--surface);
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  .print-phase-header.f1 { border-color: var(--phase1); }
+  .print-phase-header.f2 { border-color: var(--phase2); }
+  .print-phase-header.f3 { border-color: var(--phase3); }
+  .print-phase-header.f4 { border-color: var(--phase4); }
+  .print-phase-header .pn { font-weight: 700; font-size: 14px; }
+  .print-phase-header .pi { font-size: 11px; color: var(--text-muted); }
+  .print-post {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+  }
+  .print-post-top { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; flex-wrap: wrap; }
+  .print-post-top .pp-day { font-size: 11px; font-weight: 700; color: var(--text-dim); }
+  .print-post-top .pp-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; border: 1px solid; }
+  .print-post-top .pp-step { font-size: 12px; font-weight: 700; }
+  .print-post-top .pp-sub { font-size: 11px; font-style: italic; color: var(--text-muted); margin-left: auto; }
+  .print-hook { padding: 8px 12px; background: var(--surface); border-radius: 8px; margin-top: 6px; }
+  .print-hook .ph-text { font-size: 12px; }
+  .print-hook .ph-num { color: var(--accent-text); font-weight: 700; margin-right: 6px; }
+  .print-hook .ph-instr { font-size: 10px; color: var(--text-dim); font-style: italic; margin-top: 3px; }
+  .print-hook .ph-hint { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+  .print-hook .ph-hint b { color: var(--accent-text); }
+
+  @media print {
+    /* Alleen de uitgeklapte PDF-versie tonen bij printen */
+    .step, .btn-generate, #output, .header p { display: none !important; }
+    #print-view { display: block !important; }
+    body { background: #fff; }
+    .container { max-width: 100%; padding: 0; }
+    .print-post, .print-phase { page-break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
@@ -645,7 +690,14 @@
   <!-- OUTPUT -->
   <div id="output"></div>
 
+  <!-- PRINT VIEW: volledig uitgeklapte versie, alleen zichtbaar bij PDF/print -->
+  <div id="print-view"></div>
+
 </div>
+
+<!-- SheetJS voor Excel-export + iframe-resizer voor auto-height in embed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.9/iframeResizer.contentWindow.min.js"></script>
 
 <script>
 // ============================================
@@ -832,12 +884,7 @@ const HOOKS = {
     {id:"HT12", text:"{X}x {concreet micro-resultaat}, ook met {rauwe realiteit}", tier:"L", phases:["F1","F4"], instruction:"'5x wakker worden zonder wallen, ook met 3 kids en een snurkende man.' De realiteit maakt het herkenbaar."},
     {id:"HT13", text:"Bye bye {probleem} — {X} {routines/stappen} die je {positiever resultaat} maken dan {herkenbare coping}", tier:"L", phases:["F1","F4"], instruction:"Speels en concreet. De vergelijking met de coping voegt humor toe."},
     {id:"HT14", text:"{X}x {seizoen/moment} {type} haakjes om je {specifiek aanbod} te verkopen", tier:"LM", phases:["F4"], instruction:"Meta maar waardevol. De seizoensgebondenheid creëert urgentie."},
-    {id:"HT15", text:"Gebruik deze {type} hooks om je {metric} nog deze week te verdubbelen", tier:"LM", phases:["F4"], instruction:"De tijdsdruk ('deze week') maakt het urgent. De metric moet concreet zijn."},
-    {id:"HT16", text:"Dit is wat er gebeurt als je stopt met {specifiek gedrag dat ze allemaal doen}", tier:"A", phases:["F1","F2"], instruction:"Het gedrag moet zó specifiek zijn dat ze denkt 'shit, doe IK dat ook?' Bijv. 'stopt met je aanbod uitleggen' of 'stopt met gratis calls geven'."},
-    {id:"HT17", text:"Ik werd wakker met {concreet bewijs} en had letterlijk niets gedaan", tier:"A", phases:["F1"], instruction:"Het 'niets gedaan' raakt het verlangen naar moeiteloosheid. Het bewijs moet concreet zijn — een getal, een DM, een Mollie-melding."},
-    {id:"HT18", text:"Dit is niet voor iedereen. Dit is voor de vrouw die {ultra-specifiek herkenbaar moment}", tier:"MH", phases:["F1"], instruction:"Ze moet zichzelf herkennen alsof je in haar hoofd zit. Bijv. 'die 's avonds haar eigen salespage leest en denkt: waarom kopen ze niet?'"},
-    {id:"HT19", text:"Ik heb 1 regel in mijn bedrijf die iedereen raar vindt maar me elke week {specifiek resultaat} geeft", tier:"MH", phases:["F1"], instruction:"'Raar' wekt nieuwsgierigheid. Het wekelijkse resultaat moet concreet zijn. De caption onthult de regel."},
-    {id:"HT20", text:"Sssht ik heb een geheim (dat me {specifiek resultaat} opleverde)", tier:"A", phases:["F1","F2"], instruction:"Speels en persoonlijk. Het geheim moet het waard zijn — de tussenhaakjes geven net genoeg weg om door te willen lezen."}
+    {id:"HT15", text:"Gebruik deze {type} hooks om je {metric} nog deze week te verdubbelen", tier:"LM", phases:["F4"], instruction:"De tijdsdruk ('deze week') maakt het urgent. De metric moet concreet zijn."}
   ]
 };
 
@@ -1279,14 +1326,163 @@ function renderOutput(plan, totalPosts, arcWeeks, cadans, userInput) {
   // Actions
   html += `
     <div class="output-actions">
-      <button class="btn-secondary" onclick="window.print()">Print / PDF</button>
+      <button class="btn-secondary" onclick="downloadPDF()">⬇ Download PDF (alles uitgeklapt)</button>
+      <button class="btn-secondary" onclick="downloadExcel()">⬇ Download Excel</button>
       <button class="btn-secondary" onclick="generate()">Nieuw plan</button>
     </div>
   `;
 
   outputEl.innerHTML = html;
   outputEl.classList.add('visible');
+
+  // Bouw de volledig uitgeklapte print-versie alvast op
+  buildPrintView(plan, totalPosts, arcWeeks, cadans, userInput);
+
   outputEl.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+// ============================================
+// EXPORT HELPERS: platte lijst van alle posts
+// ============================================
+
+// Zet currentPlan om naar een platte array met globale dag/week + uitgeklapte haakjes
+function flattenPlan(plan, cadans) {
+  const phases = ['F1','F2','F3','F4'];
+  const rows = [];
+  let globalDay = 0;
+  phases.forEach(phase => {
+    const meta = PHASE_META[phase];
+    plan[phase].posts.forEach(post => {
+      globalDay++;
+      const week = Math.ceil(globalDay / cadans);
+      rows.push({
+        post: globalDay,
+        week: week,
+        phase: phase,
+        phaseName: meta.name,
+        stepName: post.stepName,
+        stepIntent: post.stepIntent,
+        stepFeel: post.stepFeel,
+        type: CONTENT_TYPE_LABELS[post.type],
+        typeColor: TYPE_COLORS[post.type],
+        category: CONTENT_TYPE_CATEGORIES[post.type],
+        subthema: post.subthema || '',
+        hooks: post.hooks
+      });
+    });
+  });
+  return rows;
+}
+
+function hintsText(hookText) {
+  const hints = getContextHints(hookText, currentUserInput);
+  return hints.map(h => `${h.label}: ${h.value}`).join(' | ');
+}
+
+// ============================================
+// PDF: volledig uitgeklapte print-versie
+// ============================================
+
+function buildPrintView(plan, totalPosts, arcWeeks, cadans, userInput) {
+  const archLabel = state.archetype.charAt(0).toUpperCase() + state.archetype.slice(1);
+  const tierLabel = state.tier === 'low' ? 'Low (€22-€333)' : state.tier === 'mid' ? 'Mid (€500-€5k)' : 'High (€10k+)';
+  const rows = flattenPlan(plan, cadans);
+
+  let html = `
+    <div class="output-header">
+      <h2>Jouw MOMENTUM-plan</h2>
+      <p class="meta">${archLabel} × ${tierLabel} × ${cadans}x/week × ${arcWeeks} weken = ${totalPosts} posts</p>
+      <p class="meta" style="color:var(--accent-text); font-weight:600;">${userInput.aanbod}</p>
+      ${userInput.subthemas.length > 0 ? `<p class="meta">${userInput.thema} → ${userInput.subthemas.join(' · ')}</p>` : ''}
+    </div>
+  `;
+
+  let lastPhase = null;
+  rows.forEach(r => {
+    if (r.phase !== lastPhase) {
+      if (lastPhase !== null) html += `</div>`;
+      const stepNames = PHASE_STRUCTURE[r.phase].map(s => s.step).join(' + ');
+      const stepIntents = PHASE_STRUCTURE[r.phase].map(s => DROP_IT_STEPS[s.step].intent).join(' → ');
+      html += `<div class="print-phase"><div class="print-phase-header ${r.phase.toLowerCase()}"><div class="pn">${stepNames}</div><div class="pi">${stepIntents}</div></div>`;
+      lastPhase = r.phase;
+    }
+    html += `
+      <div class="print-post">
+        <div class="print-post-top">
+          <span class="pp-day">Week ${r.week} · Post ${r.post}</span>
+          <span class="pp-tag" style="background:${r.typeColor}10; border-color:${r.typeColor}40; color:${r.typeColor};">${r.type}</span>
+          <span class="pp-step">${r.stepName}</span>
+          ${r.subthema ? `<span class="pp-sub">${r.subthema}</span>` : ''}
+        </div>
+    `;
+    r.hooks.forEach((hook, i) => {
+      const hints = getContextHints(hook.text, currentUserInput);
+      html += `
+        <div class="print-hook">
+          <div class="ph-text"><span class="ph-num">${i+1}</span>${hook.text}</div>
+          <div class="ph-instr">${hook.instruction}</div>
+          ${hints.length > 0 ? `<div class="ph-hint">${hints.map(h => `<b>${h.label}:</b> ${h.value}`).join(' &nbsp;·&nbsp; ')}</div>` : ''}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  });
+  if (lastPhase !== null) html += `</div>`;
+
+  document.getElementById('print-view').innerHTML = html;
+}
+
+function downloadPDF() {
+  // De print-versie is al opgebouwd en wordt via @media print getoond
+  window.print();
+}
+
+// ============================================
+// EXCEL: 1 rij per post (Notion-klaar)
+// ============================================
+
+function downloadExcel() {
+  if (!currentPlan) return;
+  const cadans = parseInt(document.getElementById('cadans').value);
+  const rows = flattenPlan(currentPlan, cadans);
+
+  const data = rows.map(r => {
+    const h = r.hooks;
+    return {
+      'Post': r.post,
+      'Week': r.week,
+      'Fase': r.phaseName,
+      'Stap': r.stepName,
+      'Type': r.type,
+      'Categorie': r.category,
+      'Subthema': r.subthema,
+      'Gevoel': r.stepFeel,
+      'Haakje 1': h[0] ? h[0].text : '',
+      'Instructie 1': h[0] ? h[0].instruction : '',
+      'Context 1': h[0] ? hintsText(h[0].text) : '',
+      'Haakje 2': h[1] ? h[1].text : '',
+      'Instructie 2': h[1] ? h[1].instruction : '',
+      'Context 2': h[1] ? hintsText(h[1].text) : '',
+      'Haakje 3': h[2] ? h[2].text : '',
+      'Instructie 3': h[2] ? h[2].instruction : '',
+      'Context 3': h[2] ? hintsText(h[2].text) : ''
+    };
+  });
+
+  const ws = XLSX.utils.json_to_sheet(data);
+  // Kolombreedtes voor leesbaarheid
+  ws['!cols'] = [
+    {wch:6},{wch:6},{wch:18},{wch:18},{wch:14},{wch:10},{wch:24},{wch:28},
+    {wch:50},{wch:50},{wch:40},
+    {wch:50},{wch:50},{wch:40},
+    {wch:50},{wch:50},{wch:40}
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'MOMENTUM-plan');
+
+  const aanbod = (currentUserInput && currentUserInput.aanbod && !currentUserInput.aanbod.startsWith('['))
+    ? currentUserInput.aanbod.replace(/[^a-z0-9]+/gi,'-').slice(0,40) : 'plan';
+  XLSX.writeFile(wb, `MOMENTUM-${aanbod}.xlsx`);
 }
 
 function toggleHooks(cardId, phase, postIdx) {
