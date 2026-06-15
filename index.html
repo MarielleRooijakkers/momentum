@@ -335,6 +335,7 @@
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
+    min-width: 0; /* laat grid-kaartjes krimpen i.p.v. overflowen */
   }
   .cal-card:hover { border-color: var(--border-accent); background: var(--surface-hover); }
   .cal-card.active {
@@ -1296,7 +1297,7 @@ function renderOutput(plan, totalPosts, arcWeeks, cadans, userInput) {
           </div>
           <div class="phase-week-label">${weekLabel} · ${p.postsCount} posts</div>
         </div>
-        <div class="cal-grid" style="grid-template-columns: repeat(${Math.min(p.postsCount, cadans)}, 1fr);">
+        <div class="cal-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
     `;
 
     p.posts.forEach((post, postIdx) => {
