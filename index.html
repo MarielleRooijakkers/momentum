@@ -1539,6 +1539,69 @@ function toggleHooks(cardId, phase, postIdx) {
   container.scrollIntoView({behavior: 'smooth', block: 'nearest'});
 }
 
+// ============================================
+// TESTDATA PREFILL (alleen zichtbaar met ?test in de URL)
+// Eén klik en het hele formulier staat ingevuld voor een snelle test.
+// ============================================
+
+const TEST_DATA = {
+  archetype: 'maven',
+  tier: 'mid',
+  cadans: '3',
+  arcLength: '4',
+  aanbod: 'De playground businessclub 6 maanden',
+  thema: 'Ecosystemen, schalen in omzet en vrijheid',
+  subthemas: [
+    'Aanbodladder vs wealth system - pulls & converters',
+    'Content systeem ipv to do',
+    'Draagkracht vanuit CEO',
+    'AI als team'
+  ],
+  verlangens: '1. Schalen terwijl het simpeler wordt (risico wie ben ik dan?)\n2. Minder moeten, niet alles dragen, minder aantrekken van de buitenwereld, eenvoudiger\n3. Meer sales van betere klanten (weglopen, uitschrijven, hoe opkomen dagen vs snel geld)',
+  grotereVerlangen: 'Een bedrijf wat draait ipv waar je binnen rent. Volwassen bedrijf wat logisch voelt, minder drama kent, losse identiteit is, naast je staat en wat je leidt zodat jij ook iemand bent los van je bedrijf en een leven leidt los van je bedrijf.',
+  gap: 'Ze weet niet/ziet niet hoe ze van alle losse dingen 1 systeem maakt. Ze ziet veel maar niet de structuren. Niet de synergie, niet het systeem.',
+  symptoom: 'Terugtrekkende beweging als het te veel wordt of als het te stil wordt.',
+  diagnose: 'Ze weet niet hoe ze van alle losse dingen iets maakt wat zonder haar draait. Ze identificeert zichzelf te veel met haar bedrijf waardoor ze altijd dingen blijft doen. Ze ziet het systeem niet en wie ze moet zijn om daarbinnen te groeien.',
+  marktirritatie: '1 type format coaches. Dat er maar 1 weg is. Dat je veel skills geleerd krijgt maar niet hoe je moet leiden als CEO.'
+};
+
+function loadTestData() {
+  const d = TEST_DATA;
+  // Archetype + tier kaartjes selecteren
+  document.querySelectorAll('.option-card').forEach(c => {
+    if (c.dataset.value === d.archetype || c.dataset.value === d.tier) {
+      const sibs = c.parentElement.querySelectorAll('.option-card');
+      sibs.forEach(s => s.classList.remove('selected'));
+      c.classList.add('selected');
+    }
+  });
+  state.archetype = d.archetype;
+  state.tier = d.tier;
+  // Cadans + arc
+  document.getElementById('cadans').value = d.cadans;
+  updateCadans();
+  document.getElementById('arcLength').value = d.arcLength;
+  // Tekstvelden
+  ['aanbod','thema','verlangens','grotereVerlangen','gap','symptoom','diagnose','marktirritatie']
+    .forEach(id => { const e = document.getElementById(id); if (e) e.value = d[id]; });
+  // Subthema's: extra rijen bijmaken indien nodig
+  while (document.querySelectorAll('.subthema-input').length < d.subthemas.length) addSubthema();
+  const subInputs = document.querySelectorAll('.subthema-input');
+  d.subthemas.forEach((t, i) => { if (subInputs[i]) subInputs[i].value = t; });
+}
+
+function initTestMode() {
+  if (!/[?&#]test/.test(window.location.href)) return;
+  const btn = document.createElement('button');
+  btn.textContent = '⚡ Laad testdata';
+  btn.onclick = loadTestData;
+  btn.style.cssText = 'position:fixed;top:12px;right:12px;z-index:9999;padding:8px 14px;'
+    + 'background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:inherit;'
+    + 'font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);';
+  document.body.appendChild(btn);
+}
+document.addEventListener('DOMContentLoaded', initTestMode);
+
 function shufflePostHooks(event, phase, postIdx, cardId) {
   event.stopPropagation();
   const post = currentPlan[phase].posts[postIdx];
